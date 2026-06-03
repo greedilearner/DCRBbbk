@@ -31,7 +31,7 @@ function App() {
     fetchUser();
   }, []);
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/DCRBbbk">
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
