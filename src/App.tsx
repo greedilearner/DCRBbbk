@@ -44,7 +44,10 @@ function App() {
         <Route path="/Personal_info/:accusedId" element={<Datapage />} />
         <Route path="/Insertdata" element={<Dataentery />} />
         <Route path="/Editdata/:accusedId" element={<Dataentery />} />
-        <Route path="/Databailer/:accusedId" element={<Databailer />} />
+        <Route
+          path="/Databailer/:accusedId/:Page/:crimeno"
+          element={<Databailer />}
+        />
         <Route path="/BailerInfo/:accusedId" element={<BailerInfo />} />
       </Routes>
     </BrowserRouter>

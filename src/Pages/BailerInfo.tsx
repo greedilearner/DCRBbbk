@@ -149,12 +149,8 @@ const BailerInfo = () => {
                   <th className="px-6 py-4 text-left font-semibold">
                     Case Date
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold">
-                    Case Status
-                  </th>
-                  <th className="px-6 py-4 text-left font-semibold">
-                    Case Remark
-                  </th>
+
+                  <th className="px-6 py-4 text-left font-semibold">Remark</th>
                 </tr>
               </thead>
 
@@ -188,13 +184,7 @@ const BailerInfo = () => {
                     <td className="px-6 py-2 text-left">{row["Address"]}</td>
                     <td className="px-6 py-2 text-left">{row["Case Date"]}</td>
 
-                    <td className="px-6 py-2 text-left">
-                      {row["Case Status"]}
-                    </td>
-
-                    <td className="px-6 py-2 text-left">
-                      {row["Case Remark"]}
-                    </td>
+                    <td className="px-6 py-2 text-left">{row["Remark"]}</td>
                   </tr>
                 ))}
               </tbody>

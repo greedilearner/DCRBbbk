@@ -203,7 +203,7 @@ const Dataentery = () => {
       <section className="bg-gray-300 px-4 py-6 min-h-screen print:bg-white print:px-0 print:py-0">
         <form
           onSubmit={handleSubmit}
-          className="shadow-black flex flex-col rounded-md font-bold font-serif text-black bg-white min-h-screen w-full max-w-212.5 mx-auto p-4 gap-6 overflow-hidden print:max-w-198.5 print:mx-auto print:shadow-none print:border print:border-black print:min-h-280"
+          className="shadow-black flex flex-col rounded-md font-bold font-serif text-black bg-white min-h-screen w-full  p-4 gap-6 overflow-hidden print:max-w-198.5 print:mx-auto print:shadow-none print:border print:border-black print:min-h-280"
         >
           {/* PERSONAL INFORMATION */}
           <div>
@@ -440,8 +440,7 @@ const Dataentery = () => {
                       </td>
 
                       <td className="border p-2 wrap-break-word whitespace-normal">
-                        <input
-                          type="text"
+                        <select
                           value={history["पुलिस स्टेशन"]}
                           onChange={(e) =>
                             updateCriminalHistory(
@@ -450,9 +449,33 @@ const Dataentery = () => {
                               e.target.value,
                             )
                           }
-                          className="min-w-0 border p-2 rounded"
-                          placeholder="पुलिस स्टेशन"
-                        />
+                          className="flex-1 min-w-0 border border-black p-2 rounded"
+                        >
+                          <option>कोतवाली नगर</option>
+                          <option>देवा</option>
+                          <option>जहागीराबाद</option>
+                          <option>फतेहपुर</option>
+                          <option>मोहम्मदपुर खाला</option>
+                          <option>कुर्सी</option>
+                          <option>बडडूपुर</option>
+                          <option>घुघटेर</option>
+                          <option>रामनगर</option>
+                          <option>बदोसराय</option>
+                          <option> मसौली</option>
+                          <option>रामसनेहीघाट</option>
+                          <option>टिकैत नगर</option>
+                          <option>दरियाबाद</option>
+                          <option> असन्द्रा</option>
+                          <option>हैदरगढ</option>
+                          <option> लोनीकटरा</option>
+                          <option>कोठी</option>
+                          <option>सुबेहा</option>
+                          <option>सफदरगंज</option>
+                          <option>जैदपुर</option>
+                          <option>सतरिख</option>
+                          <option>माती</option>
+                          <option>other</option>
+                        </select>
                       </td>
 
                       <td className="border p-2 wrap-break-word whitespace-normal">

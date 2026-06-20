@@ -11,7 +11,8 @@ const Databailer = () => {
     ? "https://backend.aryanss1417.workers.dev"
     : "http://localhost:8787";
   const [accused, setAccused] = useState<any>(null);
-  const { accusedId } = useParams();
+  const { accusedId, Page, crimeno } = useParams();
+  console.log(crimeno);
   const [accusedid, setAccusedid] = useState<number | null>(null);
 
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Databailer = () => {
       let response;
 
       response = await fetch(
-        `${API_URL}/crime/${encodeURIComponent(accusedId ?? "")}`,
+        `${API_URL}/crime/${encodeURIComponent(accusedId ?? "")}/${encodeURIComponent(crimeno ?? "")}`,
         {
           credentials: "include",
         },
@@ -37,7 +38,6 @@ const Databailer = () => {
       setFormData((prev) => ({
         ...prev,
         Accused_id: accusedRecord?.Accused_id ?? null,
-        "Police Station": accusedRecord?.["पुलिस स्टेशन"],
         "मुकदमा अपराध संख्या": accusedRecord?.["मुकदमा अपराध संख्या"] ?? "",
       }));
     } catch (error) {
@@ -103,6 +103,73 @@ const Databailer = () => {
     }
   };
 
+  const [courtFormData, setCourtFormData] = useState({
+    Date: "",
+    "मुकदमा अपराध संख्या": "",
+    Status: "",
+    Remark: "",
+    Accused_status: "",
+    "Police Station": "",
+    Accused_id: null as number | null,
+  });
+
+  const handleCourtChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    setCourtFormData({
+      ...courtFormData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCourtSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const policeStation = accused?.["पुलिस स्टेशन"] ?? "";
+    const response = await fetch(
+      `${API_URL}/court_records/${encodeURIComponent(policeStation)}`,
+      {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(courtFormData),
+      },
+    );
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("Court Record Saved");
+      console.log(result);
+
+      setCourtFormData({
+        Date: "",
+        "मुकदमा अपराध संख्या": accused?.["मुकदमा अपराध संख्या"] ?? "",
+        Status: "",
+        Remark: "",
+        Accused_status: "",
+        "Police Station": "",
+        Accused_id: accusedid,
+      });
+    } else {
+      alert(result.error || "Failed to save court record");
+    }
+  };
+
+  useEffect(() => {
+    if (accused) {
+      setCourtFormData((prev) => ({
+        ...prev,
+        Accused_id: accused?.Accused_id ?? null,
+        "मुकदमा अपराध संख्या": accused?.["मुकदमा अपराध संख्या"] ?? "",
+        "Police Station": accused["पुलिस स्टेशन"] ?? "",
+      }));
+    }
+  }, [accused]);
+
   useEffect(() => {
     fetchData();
   }, [accusedId]);
@@ -156,90 +223,284 @@ const Databailer = () => {
               </div>
             </div>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className="border border-black p-4">
-              <div className="grid grid-cols-2 gap-6">
-                <input
-                  name="Case Number"
-                  value={formData["Case Number"]}
-                  onChange={handleChange}
-                  placeholder="Case Number"
-                  className="border border-black p-2 rounded"
-                />
+          {(() => {
+            switch (Page) {
+              case "bailer":
+                return (
+                  <form onSubmit={handleSubmit}>
+                    <div className="border border-black p-4">
+                      <div className="grid grid-cols-2 gap-6">
+                        <input
+                          name="Case Number"
+                          value={formData["Case Number"]}
+                          onChange={handleChange}
+                          placeholder="Case Number"
+                          className="border border-black p-2 rounded"
+                        />
 
-                <input
-                  name="Bailer Name"
-                  value={formData["Bailer Name"]}
-                  onChange={handleChange}
-                  placeholder="Bailer Name"
-                  className="border border-black p-2 rounded"
-                />
+                        <input
+                          name="Bailer Name"
+                          value={formData["Bailer Name"]}
+                          onChange={handleChange}
+                          placeholder="Bailer Name"
+                          className="border border-black p-2 rounded"
+                        />
 
-                <input
-                  name="Father Name"
-                  value={formData["Father Name"]}
-                  onChange={handleChange}
-                  placeholder="Father Name"
-                  className="border border-black p-2 rounded"
-                />
+                        <input
+                          name="Father Name"
+                          value={formData["Father Name"]}
+                          onChange={handleChange}
+                          placeholder="Father Name"
+                          className="border border-black p-2 rounded"
+                        />
 
-                <input
-                  name="Address"
-                  value={formData["Address"]}
-                  onChange={handleChange}
-                  placeholder="Address"
-                  className="border border-black p-2 rounded"
-                />
+                        <input
+                          name="Address"
+                          value={formData["Address"]}
+                          onChange={handleChange}
+                          placeholder="Address"
+                          className="border border-black p-2 rounded"
+                        />
 
-                <input
-                  type="date"
-                  name="Case Date"
-                  value={formData["Case Date"]}
-                  onChange={handleChange}
-                  onClick={(e) => e.currentTarget.showPicker?.()}
-                  className="w-full border  border-black p-2 rounded "
-                />
-              </div>
+                        <input
+                          type="date"
+                          name="Case Date"
+                          value={formData["Case Date"]}
+                          onChange={handleChange}
+                          onClick={(e) => e.currentTarget.showPicker?.()}
+                          className="w-full border  border-black p-2 rounded "
+                        />
+                      </div>
 
-              <textarea
-                name="Case Remark"
-                value={formData["Remark"]}
-                onChange={handleChange}
-                rows={3}
-                placeholder="Case Remark"
-                className="w-full border border-black p-2 rounded mt-4"
-              />
-            </div>
+                      <textarea
+                        name="Remark"
+                        value={formData["Remark"]}
+                        onChange={handleChange}
+                        rows={3}
+                        placeholder="Case Remark"
+                        className="w-full border border-black p-2 rounded mt-4"
+                      />
+                    </div>
 
-            <div className="flex justify-end gap-4 pt-4">
-              <button
-                type="reset"
-                className="border border-black px-6 py-2 rounded"
-                onClick={() =>
-                  setFormData({
-                    "Case Number": "",
-                    "Bailer Name": "",
+                    <div className="flex justify-end gap-4 pt-4">
+                      <button
+                        type="reset"
+                        className="border border-black px-6 py-2 rounded"
+                        onClick={() =>
+                          setFormData({
+                            "Case Number": "",
+                            "Bailer Name": "",
 
-                    "Father Name": "",
-                    Address: "",
-                    "मुकदमा अपराध संख्या": accusedId ?? "",
-                    "Case Date": "",
-                    Remark: "",
-                    Accused_id: accusedid,
-                  })
-                }
-              >
-                Reset
-              </button>
+                            "Father Name": "",
+                            Address: "",
+                            "मुकदमा अपराध संख्या": accusedId ?? "",
+                            "Case Date": "",
+                            Remark: "",
+                            Accused_id: accusedid,
+                          })
+                        }
+                      >
+                        Reset
+                      </button>
 
-              <button
-                type="submit"
-                className="bg-black text-white px-6 py-2 rounded"
-              >
-                Save Record
-              </button>
-            </div>
-          </form>
+                      <button
+                        type="submit"
+                        className="bg-black text-white px-6 py-2 rounded"
+                      >
+                        Save Record
+                      </button>
+                    </div>
+                  </form>
+                );
+              case "court":
+                return (
+                  <form onSubmit={handleCourtSubmit}>
+                    <div className="border border-black p-4">
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="flex flex-col gap-1">
+                          <label className="text-sm font-semibold">
+                            Next Date
+                          </label>
+                          <input
+                            type="date"
+                            name="Date"
+                            value={courtFormData.Date}
+                            onChange={handleCourtChange}
+                            onClick={(e) => e.currentTarget.showPicker?.()}
+                            className="w-full border border-black p-2 rounded"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                          <label className="text-sm font-semibold">
+                            Status
+                          </label>
+
+                          <select
+                            name="Status"
+                            value={courtFormData.Status}
+                            onChange={handleCourtChange}
+                            className="border border-black p-2 rounded"
+                          >
+                            <option value="">Case Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Convicted">Convicted</option>
+                            <option value="Acquitted">Acquitted</option>
+                          </select>
+                        </div>
+
+                        <div className="flex flex-col gap-1 col-span-2">
+                          <label className="text-sm font-semibold">
+                            Accused Status
+                          </label>
+
+                          <select
+                            name="Accused_status"
+                            value={courtFormData.Accused_status}
+                            onChange={handleCourtChange}
+                            className="border border-black p-2 rounded"
+                          >
+                            <option value="">Case Status</option>
+                            <option value="न्यायालय मे उपस्थित">
+                              न्यायालय मे उपस्थित
+                            </option>
+                            <option value="वारण्ट">वारण्ट</option>
+                            <option value="हाजिरी माफी">हाजिरी माफी</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1 mt-4">
+                        <label className="text-sm font-semibold">Remark</label>
+                        <textarea
+                          name="Remark"
+                          value={courtFormData.Remark}
+                          onChange={handleCourtChange}
+                          rows={3}
+                          placeholder="Remark"
+                          className="w-full border border-black p-2 rounded"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-4 pt-4">
+                      <button
+                        type="reset"
+                        className="border border-black px-6 py-2 rounded"
+                        onClick={() =>
+                          setCourtFormData({
+                            Date: "",
+                            "मुकदमा अपराध संख्या":
+                              accused?.["मुकदमा अपराध संख्या"] ?? "",
+                            Status: "",
+                            Remark: "",
+                            "Police Station": "",
+                            Accused_status: "",
+                            Accused_id: accusedid,
+                          })
+                        }
+                      >
+                        Reset
+                      </button>
+
+                      <button
+                        type="submit"
+                        className="bg-black text-white px-6 py-2 rounded"
+                      >
+                        Save Record
+                      </button>
+                    </div>
+                  </form>
+                );
+              default:
+                return (
+                  <form onSubmit={handleSubmit}>
+                    <div className="border border-black p-4">
+                      <div className="grid grid-cols-2 gap-6">
+                        <input
+                          name="Case Number"
+                          value={formData["Case Number"]}
+                          onChange={handleChange}
+                          placeholder="Case Number"
+                          className="border border-black p-2 rounded"
+                        />
+
+                        <input
+                          name="Bailer Name"
+                          value={formData["Bailer Name"]}
+                          onChange={handleChange}
+                          placeholder="Bailer Name"
+                          className="border border-black p-2 rounded"
+                        />
+
+                        <input
+                          name="Father Name"
+                          value={formData["Father Name"]}
+                          onChange={handleChange}
+                          placeholder="Father Name"
+                          className="border border-black p-2 rounded"
+                        />
+
+                        <input
+                          name="Address"
+                          value={formData["Address"]}
+                          onChange={handleChange}
+                          placeholder="Address"
+                          className="border border-black p-2 rounded"
+                        />
+
+                        <input
+                          type="date"
+                          name="Case Date"
+                          value={formData["Case Date"]}
+                          onChange={handleChange}
+                          onClick={(e) => e.currentTarget.showPicker?.()}
+                          className="w-full border  border-black p-2 rounded "
+                        />
+                      </div>
+
+                      <textarea
+                        name="Remark"
+                        value={formData["Remark"]}
+                        onChange={handleChange}
+                        rows={3}
+                        placeholder="Case Remark"
+                        className="w-full border border-black p-2 rounded mt-4"
+                      />
+                    </div>
+
+                    <div className="flex justify-end gap-4 pt-4">
+                      <button
+                        type="reset"
+                        className="border border-black px-6 py-2 rounded"
+                        onClick={() =>
+                          setFormData({
+                            "Case Number": "",
+                            "Bailer Name": "",
+
+                            "Father Name": "",
+                            Address: "",
+                            "मुकदमा अपराध संख्या": accusedId ?? "",
+                            "Case Date": "",
+                            Remark: "",
+                            Accused_id: accusedid,
+                          })
+                        }
+                      >
+                        Reset
+                      </button>
+
+                      <button
+                        type="submit"
+                        className="bg-black text-white px-6 py-2 rounded"
+                      >
+                        Save Record
+                      </button>
+                    </div>
+                  </form>
+                );
+            }
+          })()}
         </div>
       </section>
     </>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Arrow from "../assets/arrow";
-import nullphoto from "../assets/hero.png";
+import nullphoto from "../assets/nullphoto.png";
 import { useAuth } from "../AuthContext.tsx";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
@@ -15,6 +15,7 @@ const Datapage = () => {
   const [accused, setAccused] = useState<AccusedRecord | null>(null);
   const [bailers, setBailers] = useState([]);
   const [history, setHistory] = useState([]);
+  const [courtRecords, setCourtRecords] = useState<any[]>([]);
   const navigate = useNavigate();
   const API_URL = import.meta.env.PROD
     ? "https://backend.aryanss1417.workers.dev"
@@ -65,10 +66,26 @@ const Datapage = () => {
       console.error("Error fetching data:", error);
     }
   }
+  async function fetchCourtRecords() {
+    try {
+      let response;
+
+      response = await fetch(`${API_URL}/court_records/${accusedId}`, {
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      console.log(data);
+      setCourtRecords(Array.isArray(data.data) ? data.data : []);
+    } catch (error) {
+      console.error("Error fetching court records:", error);
+    }
+  }
   useEffect(() => {
     fetchAccused();
     fetchBailers();
     fetchHistory();
+    fetchCourtRecords();
   }, []);
   const handelClick = () => {
     navigate(`/Records`);
@@ -216,7 +233,7 @@ const Datapage = () => {
             <div className="text-black p-1 ">
               <p className="font-bold font-serif">Bailer Table</p>
             </div>
-            <table className=" text-xs">
+            <table className=" text-xs  mx-auto">
               <thead>
                 <tr className="bg-gray-900 text-white whitespace-nowrap">
                   <th className="px-6 py-4 text-left font-semibold whitespace-normal">
@@ -234,15 +251,9 @@ const Datapage = () => {
                   </th>
                   <th className="px-6 py-4 text-left font-semibold">Address</th>
 
-                  <th className="px-6 py-4 text-left font-semibold">
-                    Case Date
-                  </th>
-                  <th className="px-6 py-4 text-left font-semibold">
-                    Case Status
-                  </th>
-                  <th className="px-6 py-4 text-left font-semibold">
-                    Case Remark
-                  </th>
+                  <th className="px-6 py-4 text-left font-semibold">Date</th>
+
+                  <th className="px-6 py-4 text-left font-semibold">Remark</th>
                 </tr>
               </thead>
 
@@ -274,14 +285,64 @@ const Datapage = () => {
                       {row["Father Name"]}
                     </td>
                     <td className="px-6 py-2 text-left">{row["Address"]}</td>
-                    <td className="px-6 py-2 text-left">{row["Case Date"]}</td>
+                    <td className="px-6 py-2 text-left">{row["Date"]}</td>
 
-                    <td className="px-6 py-2 text-left">
-                      {row["Case Status"]}
+                    <td className="px-6 py-2 text-left">{row["Remark"]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Court Data*/}
+          <div className="p-4">
+            <div className="text-black p-1 ">
+              <p className="font-bold font-serif">Court Table</p>
+            </div>
+            <table className=" text-xs mx-auto">
+              <thead>
+                <tr className="bg-gray-900 text-white whitespace-nowrap">
+                  <th className="px-6 py-4 text-left font-semibold whitespace-normal">
+                    मुकदमा अपराध संख्या
+                  </th>
+                  <th className="px-6 py-4 text-left font-semibold whitespace-normal">
+                    Date
+                  </th>
+                  <th className="px-6 py-4 text-left font-semibold">Status</th>
+
+                  <th className="px-6 py-4 text-left font-semibold">
+                    Accused_status
+                  </th>
+                  <th className="px-6 py-4 text-left font-semibold">Remark</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {courtRecords.map((row, index) => (
+                  <tr
+                    key={index}
+                    className="
+              border-b
+              border-gray-200
+              transition-all
+              duration-150
+              
+               hover:bg-gray-200 cursor-pointer 
+            "
+                  >
+                    <td className="px-6 py-2 font-medium text-left">
+                      {row["मुकदमा अपराध संख्या"]}
                     </td>
 
+                    <td className="px-6 py-2 text-left">{row["Date"]}</td>
+
+                    <td className="px-6 py-2 text-left">{row["Status"]}</td>
+
                     <td className="px-6 py-2 text-left">
-                      {row["Case Remark"]}
+                      {row["Accused_status"]}
+                    </td>
+                    <td className="px-6 py-2 font-medium text-left">
+                      {row["Remark"]}
                     </td>
                   </tr>
                 ))}
