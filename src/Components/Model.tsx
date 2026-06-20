@@ -3,8 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import type { Object3D } from "three/src/core/Object3D.js";
 export default function Model({ scale = 10, position = [0, -1, -1] }) {
-  const { scene } = useGLTF("/model.glb");
-
+  console.log("BASE_URL =", import.meta.env.BASE_URL);
+  const { scene } = useGLTF(`${import.meta.env.BASE_URL}model.glb`);
   const ref = useRef<Object3D | null>(null);
 
   useFrame((state) => {

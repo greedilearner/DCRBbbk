@@ -18,9 +18,12 @@ const Navbar = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8787/logout", {
+      await fetch(`${API_URL}/logout`, {
         method: "POST",
         credentials: "include",
       });

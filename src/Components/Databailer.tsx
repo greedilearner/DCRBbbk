@@ -7,6 +7,9 @@ const Databailer = () => {
   if (!user) {
     return <Navigate to="/" replace />;
   }
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
   const [accused, setAccused] = useState<any>(null);
   const { accusedId } = useParams();
   const [accusedid, setAccusedid] = useState<number | null>(null);
@@ -17,7 +20,10 @@ const Databailer = () => {
       let response;
 
       response = await fetch(
-        `http://localhost:8787/crime/${encodeURIComponent(accusedId ?? "")}`,
+        `${API_URL}/crime/${encodeURIComponent(accusedId ?? "")}`,
+        {
+          credentials: "include",
+        },
       );
 
       const data = await response.json();
@@ -31,6 +37,7 @@ const Databailer = () => {
       setFormData((prev) => ({
         ...prev,
         Accused_id: accusedRecord?.Accused_id ?? null,
+        "Police Station": accusedRecord?.["पुलिस स्टेशन"],
         "मुकदमा अपराध संख्या": accusedRecord?.["मुकदमा अपराध संख्या"] ?? "",
       }));
     } catch (error) {
@@ -43,11 +50,10 @@ const Databailer = () => {
   const [formData, setFormData] = useState({
     "Case Number": "",
     "Bailer Name": "",
-    "Case Status": "",
     "Father Name": "",
     Address: "",
     "Case Date": "",
-    "Case Remark": "",
+    Remark: "",
     "मुकदमा अपराध संख्या": "",
     Accused_id: null as number | null,
   });
@@ -66,7 +72,9 @@ const Databailer = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch(`http://localhost:8787/addCourt`, {
+    const response = await fetch(`${API_URL}/addCourt`, {
+      credentials: "include",
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,11 +92,10 @@ const Databailer = () => {
         "Case Number": "",
         "मुकदमा अपराध संख्या": accusedId ?? "",
         "Bailer Name": "",
-        "Case Status": "",
         "Father Name": "",
         Address: "",
         "Case Date": "",
-        "Case Remark": "",
+        Remark: "",
         Accused_id: accusedid,
       });
     } else {
@@ -168,18 +175,6 @@ const Databailer = () => {
                   className="border border-black p-2 rounded"
                 />
 
-                <select
-                  name="Case Status"
-                  value={formData["Case Status"]}
-                  onChange={handleChange}
-                  className="border border-black p-2 rounded"
-                >
-                  <option value="">Case Status</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Convicted">Convicted</option>
-                  <option value="Acquitted">Acquitted</option>
-                </select>
-
                 <input
                   name="Father Name"
                   value={formData["Father Name"]}
@@ -201,13 +196,14 @@ const Databailer = () => {
                   name="Case Date"
                   value={formData["Case Date"]}
                   onChange={handleChange}
-                  className="w-full border border-black p-2 rounded"
+                  onClick={(e) => e.currentTarget.showPicker?.()}
+                  className="w-full border  border-black p-2 rounded "
                 />
               </div>
 
               <textarea
                 name="Case Remark"
-                value={formData["Case Remark"]}
+                value={formData["Remark"]}
                 onChange={handleChange}
                 rows={3}
                 placeholder="Case Remark"
@@ -223,12 +219,12 @@ const Databailer = () => {
                   setFormData({
                     "Case Number": "",
                     "Bailer Name": "",
-                    "Case Status": "",
+
                     "Father Name": "",
                     Address: "",
                     "मुकदमा अपराध संख्या": accusedId ?? "",
                     "Case Date": "",
-                    "Case Remark": "",
+                    Remark: "",
                     Accused_id: accusedid,
                   })
                 }

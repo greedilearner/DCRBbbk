@@ -15,10 +15,13 @@ import BailerInfo from "./Pages/BailerInfo.tsx";
 
 function App() {
   const { setUser } = useAuth();
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("http://localhost:8787/me", {
+      const res = await fetch(`${API_URL}/me`, {
         credentials: "include",
       });
 
@@ -31,7 +34,7 @@ function App() {
     fetchUser();
   }, []);
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/DCRBbbk">
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -40,6 +43,7 @@ function App() {
         <Route path="/Adminpanel" element={<Adminpanel />} />
         <Route path="/Personal_info/:accusedId" element={<Datapage />} />
         <Route path="/Insertdata" element={<Dataentery />} />
+        <Route path="/Editdata/:accusedId" element={<Dataentery />} />
         <Route path="/Databailer/:accusedId" element={<Databailer />} />
         <Route path="/BailerInfo/:accusedId" element={<BailerInfo />} />
       </Routes>

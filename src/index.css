@@ -67,6 +67,31 @@ body {
   margin: 0;
 }
 
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    background: #ffffff;
+    color: black;
+    -webkit-print-color-adjust: exact;
+  }
+
+  #root {
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    border: none;
+    min-height: auto;
+  }
+}
+
 h1,
 h2 {
   font-family: var(--heading);

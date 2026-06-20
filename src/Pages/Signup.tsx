@@ -13,6 +13,9 @@ const Signup = () => {
   function handelClick() {
     navigate("/");
   }
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
 
   const handleSubmit = async () => {
     const userData = {
@@ -23,7 +26,7 @@ const Signup = () => {
       role: Role,
     };
 
-    const response = await fetch("http://localhost:8787/Signin", {
+    const response = await fetch(`${API_URL}/Signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,16 +72,7 @@ const Signup = () => {
                 placeholder="Enter Name"
               />
             </div>
-            <div className="flex flex-row  gap-3 items-center">
-              <label className="flex-1/2 text-left">Police Station :</label>
-              <input
-                type="text"
-                value={Police_station}
-                onChange={(e) => setPoliceStation(e.target.value)}
-                className="flex-1/2 border border-black p-1 rounded-md"
-                placeholder="Enter Police Station"
-              />
-            </div>
+
             <div className="flex flex-row  gap-3 items-center">
               <label className="flex-1/2 text-left">Email :</label>
               <input
@@ -98,6 +92,39 @@ const Signup = () => {
                 className="flex-1/2 border border-black p-1 rounded-md"
                 placeholder="Enter Password"
               />
+            </div>
+            <div className="flex flex-row  gap-2 items-center">
+              <label className="flex-1/2 text-left">Police Station :</label>
+              <select
+                value={Police_station}
+                onChange={(e) => setRole(e.target.value)}
+                className="flex-1/2 border border-black p-1 rounded-md"
+              >
+                <option>कोतवाली नगर</option>
+                <option>देवा</option>
+                <option>जहागीराबाद</option>
+                <option>फतेहपुर</option>
+                <option>मोहम्मदपुर खाला</option>
+                <option>कुर्सी</option>
+                <option>बडडूपुर</option>
+                <option>घुघटेर</option>
+                <option>रामनगर</option>
+                <option>बदोसराय</option>
+                <option>मसौली</option>
+                <option>रामसनेहीघाट</option>
+                <option>टिकैत नगर</option>
+                <option>दरियाबाद</option>
+                <option>असन्द्रा</option>
+                <option>हैदरगढ</option>
+                <option>लोनीकटरा</option>
+                <option>कोठी</option>
+                <option>सुबेहा</option>
+                <option>सफदरगंज</option>
+                <option>जैदपुर</option>
+                <option>सतरिख</option>
+                <option>माती</option>
+                <option>DHQ</option>
+              </select>
             </div>
             <div className="flex flex-row  gap-2 items-center">
               <label className="flex-1/2 text-left">Role :</label>

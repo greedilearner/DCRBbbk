@@ -8,9 +8,12 @@ const Login = () => {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [Role, setRole] = useState("Admin");
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
 
   const handleLogin = async () => {
-    const response = await fetch("http://localhost:8787/Login", {
+    const response = await fetch(`${API_URL}/Login`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -29,7 +32,7 @@ const Login = () => {
       alert(result.message);
     }
 
-    const meResponse = await fetch("http://localhost:8787/me", {
+    const meResponse = await fetch(`${API_URL}/me`, {
       credentials: "include",
     });
 
@@ -49,7 +52,7 @@ const Login = () => {
         <p className="text-xl font-bold">Login</p>
       </nav>
       <section className="flex flex-col bg-gray-200 min-h-screen w-full items-center px-[50vh] py-[10vh] max-[500px]:px-[10vh] max-[500px]:py-[5vh]">
-        <div className="flex flex-col gap-3 bg-white/20 border border-white/20 text-black backdrop:backdrop-blur-2xl shadow rounded-md p-5">
+        <div className="flex flex-col gap-3 bg-white/20 border border-white/20 text-black backdrop:backdrop-blur-2xl shadow rounded-md p-5 whitespace-nowrap">
           <div className="p-4">
             <img
               src={logo}
@@ -67,7 +70,7 @@ const Login = () => {
             />
           </div>
           <div className="flex flex-row  gap-2 items-center">
-            <label className="flex-1/2 text-left">Password :</label>
+            <label className="flex-1/2 text-left ">Password :</label>
             <input
               type="text"
               value={Password}

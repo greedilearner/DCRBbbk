@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import Arrow from "../assets/arrow";
-import hero from "../assets/hero.png";
+import nullphoto from "../assets/hero.png";
 import { useAuth } from "../AuthContext.tsx";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+
+type AccusedRecord = Record<string, any>;
 
 const Datapage = () => {
   const { user } = useAuth();
@@ -10,17 +12,21 @@ const Datapage = () => {
     return <Navigate to="/" replace />;
   }
   const { accusedId } = useParams();
-  const [accused, setAccused] = useState(null);
+  const [accused, setAccused] = useState<AccusedRecord | null>(null);
   const [bailers, setBailers] = useState([]);
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
+
   async function fetchHistory() {
     try {
       let response;
 
-      response = await fetch(
-        `http://localhost:8787/criminal_history/${accusedId}`,
-      );
+      response = await fetch(`${API_URL}/criminal_history/${accusedId}`, {
+        credentials: "include",
+      });
 
       const data = await response.json();
       console.log(data);
@@ -33,7 +39,9 @@ const Datapage = () => {
     try {
       let response;
 
-      response = await fetch(`http://localhost:8787/Court1/${accusedId}`);
+      response = await fetch(`${API_URL}/Court1/${accusedId}`, {
+        credentials: "include",
+      });
 
       const data = await response.json();
       console.log(data);
@@ -46,7 +54,9 @@ const Datapage = () => {
     try {
       let response;
 
-      response = await fetch(`http://localhost:8787/Accused/${accusedId}`);
+      response = await fetch(`${API_URL}/Accused/${accusedId}`, {
+        credentials: "include",
+      });
 
       const data = await response.json();
       console.log(data);
@@ -63,6 +73,14 @@ const Datapage = () => {
   const handelClick = () => {
     navigate(`/Records`);
   };
+  const handleEditClick = () => {
+    navigate(`/Editdata/${accusedId}`);
+  };
+  const accusedPhotoUrl =
+    typeof accused?.["Baseurl"] === "string" && accused["Baseurl"].trim()
+      ? accused["Baseurl"].trim()
+      : nullphoto;
+
   return (
     <>
       <nav className="flex flex-row bg-black w-full top-0 print:hidden ">
@@ -72,7 +90,14 @@ const Datapage = () => {
         <div className="flex-1 text-white items-center p-4">
           <p>Accused Detail</p>
         </div>
-        <div className="items-end p-4 ">
+        <div className="items-end p-4 flex gap-2">
+          <button
+            className=" p-1 bg-linear-to-r tracking-wider  from-[#fd3fb3] to-[#fd3e4f] text-white 
+    hover:ring-2 hover:ring-white print:hidden"
+            onClick={handleEditClick}
+          >
+            Edit
+          </button>
           <button
             className=" p-1 bg-linear-to-r tracking-wider  from-[#fd3fb3] to-[#fd3e4f] text-white 
     hover:ring-2 hover:ring-white print:hidden"
@@ -91,7 +116,14 @@ const Datapage = () => {
 
           <div className="flex flex-row w-full bg-white justify-items-center gap-5 border border-black p-4">
             <div className="p-4 border border-black">
-              <img src={hero} className="h-[20vh] w-[20vh]" />
+              <img
+                src={accusedPhotoUrl}
+                alt="Accused"
+                className="h-[30vh] w-[20vh] object-fit"
+                onError={(event) => {
+                  event.currentTarget.src = nullphoto;
+                }}
+              />
             </div>
             <div className="min-h-[10vh]  w-px bg-black " />
             <div className="flex flex-1 flex-row gap-10 p-4 ">
@@ -102,14 +134,14 @@ const Datapage = () => {
                 </div>
                 <div className="flex flex-1 flex-row gap-10 p-4 justify-items-center">
                   <p>Criminal Type :</p>
-                  <p>{accused?.["Criminal_type"]}</p>
+                  <p>{accused?.["Criminal Type"]}</p>
                 </div>
                 <div className="flex flex-1 flex-row gap-10 p-4 justify-items-center">
                   <p>पिता का नाम :</p>
-                  <p>{accused?.["पुलिस स्टेशन"]}</p>
+                  <p>{accused?.["पिता का नाम"]}</p>
                 </div>
                 <div className="flex flex-1 flex-row gap-10 p-4 justify-items-center">
-                  <p>पता :</p>
+                  <p>modus operandi :</p>
                   <p>{accused?.["पता"]}</p>
                 </div>
               </div>

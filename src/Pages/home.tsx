@@ -1,8 +1,6 @@
 import Navbar from "../Components/navbar";
-
 import { useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-
 import Model from "../Components/Model";
 import heroBg from "../assets/herobg.jpeg";
 import { Navigate } from "react-router-dom";
@@ -13,13 +11,28 @@ const Home = () => {
   if (!user) {
     return <Navigate to="/" replace />;
   }
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
+
+  async function findPending() {
+    console.log(user.police_station);
+    const response = await fetch(`${API_URL}/pending/${user.police_station}`, {
+      credentials: "include",
+    });
+    const data = await response.json();
+    console.log(data);
+    alert(`You Have ${data.data.length} Pending Enteries for Today `);
+  }
+
   const isMobile = window.innerWidth < 400;
   useEffect(() => {
-    const hash = window.location.hash;
-
-    if (hash) {
-      const element = document.querySelector(hash);
-      element?.scrollIntoView({ behavior: "smooth" });
+    const sectionId = "home";
+    document.getElementById(sectionId)?.scrollIntoView({
+      behavior: "smooth",
+    });
+    if (user.role === "पैरोकार") {
+      findPending();
     }
   }, []);
   return (

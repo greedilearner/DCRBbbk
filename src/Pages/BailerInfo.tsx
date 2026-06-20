@@ -15,6 +15,9 @@ const BailerInfo = () => {
   const [bailers, setBailers] = useState([]);
 
   const navigate = useNavigate();
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
 
   async function fetchBailers() {
     try {
@@ -22,7 +25,10 @@ const BailerInfo = () => {
       let response;
 
       response = await fetch(
-        `http://localhost:8787/Court/${encodeURIComponent(accusedId)}`,
+        `${API_URL}/Court/${encodeURIComponent(accusedId)}`,
+        {
+          credentials: "include",
+        },
       );
 
       const data = await response.json();
@@ -39,9 +45,12 @@ const BailerInfo = () => {
         let response;
 
         response = await fetch(
-          `http://localhost:8787/Courts/${encodeURIComponent(
+          `${API_URL}/Courts/${encodeURIComponent(
             accused?.["Bailer Name"] || "",
           )}/${encodeURIComponent(accused?.["Address"] || "")}`,
+          {
+            credentials: "include",
+          },
         );
 
         const data = await response.json();

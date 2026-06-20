@@ -4,17 +4,31 @@ import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuth } from "../AuthContext.tsx";
 import Navbar from "../Components/navbar.tsx";
+
+type UserRow = Record<string, any>;
+
 const Adminpanel = () => {
   const { user } = useAuth();
   if (!user) {
     return <Navigate to="/" replace />;
   }
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<UserRow[]>([]);
+  const API_URL = import.meta.env.PROD
+    ? "https://backend.aryanss1417.workers.dev"
+    : "http://localhost:8787";
+
   async function fetchUsers() {
     try {
       let response;
 
-      response = await fetch(`http://localhost:8787/user/`);
+      response = await fetch(`${API_URL}/user`, {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Failed to fetch users (${response.status})`);
+      }
 
       const data = await response.json();
       console.log(data);
@@ -24,14 +38,25 @@ const Adminpanel = () => {
     }
   }
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (user) {
+      fetchUsers();
+    }
+  }, [user]);
+
+  const getUserName = (row: UserRow) =>
+    row["Name"] ?? row["name"] ?? row["Full Name"] ?? row["username"] ?? "";
+
+  const getPoliceStation = (row: UserRow) =>
+    row["Police Station"] ?? row["police_station"] ?? row["PoliceStation"] ?? "";
+
   const handleClick = async (Email: string, status: string) => {
     const userData = {
       status: status === "Allow" ? true : false,
       Email: Email,
     };
-    const response = await fetch(`http://localhost:8787/allow/`, {
+    const response = await fetch(`${API_URL}/allow`, {
+      credentials: "include",
+
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
@@ -122,9 +147,9 @@ const Adminpanel = () => {
                hover:bg-gray-200 cursor-pointer 
             "
                       >
-                        <td className="px-3 text:left  py-2 ">{row["Name"]}</td>
+                        <td className="px-3 text:left  py-2 ">{getUserName(row)}</td>
                         <td className="px-3 text:left py-2">
-                          {row["Police Station"]}
+                          {getPoliceStation(row)}
                         </td>
                         <td className="px-3 text:left py-2">{row["role"]}</td>
                         <td className="px-3 text:left py-2">{row["Email"]}</td>
