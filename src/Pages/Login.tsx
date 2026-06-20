@@ -87,6 +87,7 @@ const Login = () => {
               className="flex-1/2 border border-black p-1 rounded-md"
             >
               <option>Admin</option>
+              <option>sub Admin</option>
               <option>पैरोकार</option>
               <option>Officer</option>
             </select>

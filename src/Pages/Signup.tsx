@@ -100,6 +100,7 @@ const Signup = () => {
                 onChange={(e) => setRole(e.target.value)}
                 className="flex-1/2 border border-black p-1 rounded-md"
               >
+                <option>Select police Station</option>
                 <option>कोतवाली नगर</option>
                 <option>देवा</option>
                 <option>जहागीराबाद</option>

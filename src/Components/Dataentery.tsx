@@ -451,6 +451,7 @@ const Dataentery = () => {
                           }
                           className="flex-1 min-w-0 border border-black p-2 rounded"
                         >
+                          <option>Select police Station</option>
                           <option>कोतवाली नगर</option>
                           <option>देवा</option>
                           <option>जहागीराबाद</option>
