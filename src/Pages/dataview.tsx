@@ -681,7 +681,7 @@ const Dataview = () => {
                                           onClick={() =>
                                             editClick(
                                               row["Accused_id"],
-                                              "bailers",
+                                              "court",
                                               row["मुकदमा अपराध संख्या"],
                                             )
                                           }

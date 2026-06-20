@@ -313,6 +313,9 @@ const Datapage = () => {
                   <th className="px-6 py-4 text-left font-semibold">
                     Accused_status
                   </th>
+                  <th className="px-6 py-4 text-left font-semibold">
+                    Case Number
+                  </th>
                   <th className="px-6 py-4 text-left font-semibold">Remark</th>
                 </tr>
               </thead>
@@ -341,8 +344,9 @@ const Datapage = () => {
                     <td className="px-6 py-2 text-left">
                       {row["Accused_status"]}
                     </td>
+
                     <td className="px-6 py-2 font-medium text-left">
-                      {row["Remark"]}
+                      {row["Case Number"]}
                     </td>
                   </tr>
                 ))}
