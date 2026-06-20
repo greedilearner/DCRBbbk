@@ -629,6 +629,9 @@ const Dataview = () => {
                               <th className="px-6 py-4 text-left font-semibold">
                                 Accused_status
                               </th>
+                              <th className="px-6 py-4 text-left font-semibold">
+                                Case Number
+                              </th>
 
                               {user?.role === "पैरोकार" ? (
                                 <>
@@ -662,6 +665,9 @@ const Dataview = () => {
 
                                   <td className="px-6 py-2">
                                     {row["Accused_status"]}
+                                  </td>
+                                  <td className="px-6 py-2">
+                                    {row["Case Number"]}
                                   </td>
                                   {user?.role === "पैरोकार" ? (
                                     <>

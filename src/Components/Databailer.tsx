@@ -111,6 +111,7 @@ const Databailer = () => {
     Accused_status: "",
     "Police Station": "",
     Accused_id: null as number | null,
+    "Case Number": "",
   });
 
   const handleCourtChange = (
@@ -153,6 +154,7 @@ const Databailer = () => {
         Accused_status: "",
         "Police Station": "",
         Accused_id: accusedid,
+        "Case Number": "",
       });
     } else {
       alert(result.error || "Failed to save court record");
@@ -318,6 +320,14 @@ const Databailer = () => {
                     <div className="border border-black p-4">
                       <div className="grid grid-cols-2 gap-6">
                         <div className="flex flex-col gap-1">
+                          <label>Case Number</label>
+                          <input
+                            name="Case Number"
+                            value={courtFormData["Case Number"]}
+                            onChange={handleCourtChange}
+                            placeholder="Case Number"
+                            className="border border-black p-2 rounded"
+                          />
                           <label className="text-sm font-semibold">
                             Next Date
                           </label>
@@ -397,6 +407,7 @@ const Databailer = () => {
                             "Police Station": "",
                             Accused_status: "",
                             Accused_id: accusedid,
+                            "Case Number": "",
                           })
                         }
                       >
